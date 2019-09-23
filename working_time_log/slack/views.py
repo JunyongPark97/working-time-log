@@ -67,4 +67,6 @@ class WebHookTest(GenericAPIView):
     # queryset =
 
     def post(self, request):
-        print(request)
+        print(request.body)
+
+        return HttpResponse(status=200)
