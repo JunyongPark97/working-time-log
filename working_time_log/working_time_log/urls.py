@@ -16,9 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from slack.views import webhook
+from slack.views import WebHookTest
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('webhook/', webhook, name='webhook'),
+    path('webhook/', WebHookTest.as_view(), name='webhook'),
 ]

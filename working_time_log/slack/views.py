@@ -8,6 +8,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from requests.compat import basestring
+from rest_framework.generics import GenericAPIView
 from slacker import Slacker
 # from slackclient import SlackClient
 # from slack import WebClient
@@ -15,6 +16,8 @@ import time
 import websocket
 
 from working_time_log.loader import load_credential
+
+from slack.serializers import SlackEnterSerializer
 
 slack_token = load_credential("SLACK_TOKEN")
 # sc = WebClient(slack_token)
@@ -57,3 +60,11 @@ def webhook(request):
             # del meta[k]
             print('Failed')
     return HttpResponse(status=200)
+
+class WebHookTest(GenericAPIView):
+    serializer_class = SlackEnterSerializer
+    # permission_classes =
+    # queryset =
+
+    def post(self, request):
+        print(request)
