@@ -7,4 +7,4 @@ class SlackEnterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Users
-        fields = ['username']
+        fields = ['username', 'entered_time']

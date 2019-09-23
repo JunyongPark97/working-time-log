@@ -1,13 +1,16 @@
 import copy
 import json
 
+import requests
 from django.http import HttpResponse
 from django.shortcuts import render
 
 # Create your views here.
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from requests import Response
 from requests.compat import basestring
+from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from slacker import Slacker
 # from slackclient import SlackClient
@@ -19,29 +22,8 @@ from working_time_log.loader import load_credential
 
 from slack.serializers import SlackEnterSerializer
 
-slack_token = load_credential("SLACK_TOKEN")
-# sc = WebClient(slack_token)
-#
-# def notification(message):
-#     token = slack_token
-#     slack = Slacker(token)
-#     print(slack)
-#     slack.chat.post_message('#working_time', message)
-#
-# if sc.rtm_connect():
-#     print('---')
-#     while True:
-#         receive_data = sc.rtm_read()
-#
-#         if len(receive_data):
-#             keys = list(receive_data[0].keys())
-#             if 'type' in keys and 'text' in keys:
-#                 print(receive_data[0]['text'])
-#                 message = receive_data[0]['text']
-#                 notification(message + 'oooo')
-#         time.sleep(1)
-# else:
-#     print("Failed")
+from slack.models import Users
+
 
 @csrf_exempt
 @require_POST
@@ -64,9 +46,28 @@ def webhook(request):
 class WebHookTest(GenericAPIView):
     serializer_class = SlackEnterSerializer
     # permission_classes =
-    # queryset =
+    queryset = Users.objects.all()
 
     def post(self, request):
         print(request.body)
 
-        return HttpResponse(status=200)
+        print(self.get_username())
+        incomming_url = load_credential("SLACK_INCOMMING_URL")
+        post_data = {
+                    "text": "I am a test message http://slack.com",
+                    "attachments": [
+                                    {
+                                        "text": "And here's an attachment!"
+                                    }
+                                    ]
+                    }
+        response = requests.post(incomming_url, data=post_data)
+        content = response.content
+        print('success')
+
+        return Response(status=status.HTTP_200_OK)
+
+    def get_username(self):
+        body = self.request.body
+        username = body.split('&')
+        return username
