@@ -11,6 +11,8 @@ slacker = "*"
 slackclient = "*"
 websocket = "*"
 djangorestframework = "*"
+mysqlclient = "*"
+pymysql = "*"
 
 [requires]
 python_version = "3.7"

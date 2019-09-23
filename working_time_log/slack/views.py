@@ -1,14 +1,13 @@
 import copy
-import json
-
+import json, random, string
 import requests
 from django.http import HttpResponse
 from django.shortcuts import render
-
+from django.utils import timezone
 # Create your views here.
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from requests import Response
+from rest_framework.response import Response
 from requests.compat import basestring
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
@@ -43,31 +42,32 @@ def webhook(request):
             print('Failed')
     return HttpResponse(status=200)
 
+
 class WebHookTest(GenericAPIView):
     serializer_class = SlackEnterSerializer
     # permission_classes =
     queryset = Users.objects.all()
 
     def post(self, request):
-        print(request.body)
-
-        print(self.get_username())
+        user = self.get_username()
+        random_id = self._make_random_id()
+        Users.objects.create(username=user, entered_time=timezone.now(), random_id=random_id)
+        
         incomming_url = load_credential("SLACK_INCOMMING_URL")
-        post_data = {
-                    "text": "I am a test message http://slack.com",
-                    "attachments": [
-                                    {
-                                        "text": "And here's an attachment!"
-                                    }
-                                    ]
-                    }
-        response = requests.post(incomming_url, data=post_data)
-        content = response.content
-        print('success')
+        post_data = {"text": 'hello {}'.format(user),"attachments": [{"text": "welcome! today's id is {}".format(random_id)}]}
+        data = json.dumps(post_data)
+        headers = {'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'}
+        response = requests.post(incomming_url, headers=headers, data=data)
 
         return Response(status=status.HTTP_200_OK)
 
     def get_username(self):
-        body = self.request.body
-        username = body.split('&')
+        body = self.request.body.decode("utf-8")
+        username = body.split('&')[6].split('=')[1]
+        print(type(username))
         return username
+
+    def _make_random_id(self):
+        key_source = string.ascii_letters + string.digits
+        random_id = ''.join(random.choice(key_source) for _ in range(6))
+        return random_id

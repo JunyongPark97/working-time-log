@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from working_time_log.loader import load_credential
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -77,8 +78,14 @@ WSGI_APPLICATION = 'working_time_log.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'working_time',
+        'HOST':'choco-database.ckanfuynig82.ap-northeast-2.rds.amazonaws.com',
+        'USER': load_credential("MONDE_DATABASE_USERNAME",""),
+        'PASSWORD': load_credential("MONDE_DATABASE_PASSWORD",""),
+        'OPTIONS':{
+            'init_command':"SET sql_mode='STRICT_TRANS_TABLES'",
+            }
     }
 }
 

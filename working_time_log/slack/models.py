@@ -7,3 +7,4 @@ class Users(models.Model):
     entered_time = models.DateTimeField(null=True)
     exited_time = models.DateTimeField(null=True)
     break_hours = models.IntegerField(default=0, null=True)
+    random_id = models.CharField(max_length=10)
