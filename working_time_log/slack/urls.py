@@ -1,5 +1,4 @@
 from django.urls import path
-
 from slack.views import WebHookEnter, WebHookExit, WebHookExplanation
 
 urlpatterns = [
