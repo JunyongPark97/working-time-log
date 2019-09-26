@@ -2,8 +2,14 @@ import datetime
 
 
 def calculate_working_hours(enter_time, exit_time, break_time):
+    if type(enter_time) is str:
+        enter_time = datetime.datetime.strptime(enter_time, '%Y-%m-%d %H:%M:%S')
+
+    if type(exit_time) is str:
+        exit_time = datetime.datetime.strptime(exit_time, '%Y-%m-%d %H:%M:%S')
     diff_time = exit_time - enter_time
     diff_sec = diff_time.total_seconds()
+    break_time = float(break_time)
     hours = float(int(diff_sec/3600) - abs(break_time))
     minutes = float((int(diff_sec/60) % 60) / 60)
     total_hours = round(hours + minutes, 2)
@@ -36,6 +42,7 @@ def get_week_data(queryset):
     for val in week_data.values():
         if val:
             total += val
+    total = round(total, 2)
     week_data['total'] = total
     return week_data
 
