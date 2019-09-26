@@ -32,7 +32,11 @@ def get_week_data(queryset):
     for no in range(last_date.weekday()+1):
         num = last_date.weekday() - no
         week_data[no] = get_days_data(num, last_date, queryset)
-    week_data['total'] = sum(week_data.values())
+    total = 0
+    for val in week_data.values():
+        if val:
+            total += val
+    week_data['total'] = total
     return week_data
 
 
