@@ -134,7 +134,7 @@ class WebHookExit(GenericAPIView):
             instance.break_hours = b_time
             instance.total_hours = calculate_working_hours(en_time, exit_time, b_time)
             instance.save()
-            self.slack_message('{}님, 퇴근시각 {}  오늘도 수고하셨습니다 :)'.format(user, exit_time))
+            self.slack_message('{}, 퇴근시각 {}  오늘도 수고하셨습니다 :)'.format(user, exit_time))
 
         return Response(status=status.HTTP_200_OK)
 
