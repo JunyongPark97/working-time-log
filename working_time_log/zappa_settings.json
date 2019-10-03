@@ -1,0 +1,10 @@
+{
+    "dev": {
+        "django_settings": "working_time_log.settings",
+        "profile_name": "workmanager",
+	"aws_region" : "ap-northeast-2"
+        "project_name": "working-time-log",
+        "runtime": "python3.7",
+        "s3_bucket": "monde-s3-zappa"
+    }
+}

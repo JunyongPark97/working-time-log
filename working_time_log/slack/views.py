@@ -116,7 +116,6 @@ class WebHookExit(GenericAPIView):
             instance.break_hours = b_time
             instance.total_hours = calculate_working_hours(enter_time, re_time, b_time)
             instance.save()
-
             username = get_real_name(user)
             self.slack_message('{}님, 퇴근시각 변경되었습니다. {} --> {} 오늘도 수고하셨습니다 :)'.format(username, exit_time, re_time))
 
@@ -134,7 +133,8 @@ class WebHookExit(GenericAPIView):
             instance.break_hours = b_time
             instance.total_hours = calculate_working_hours(en_time, exit_time, b_time)
             instance.save()
-            self.slack_message('{}, 퇴근시각 {}  오늘도 수고하셨습니다 :)'.format(user, exit_time))
+            username = get_real_name(user)
+            self.slack_message('{}, 퇴근시각 {}  오늘도 수고하셨습니다 :)'.format(username, exit_time))
 
         return Response(status=status.HTTP_200_OK)
 
@@ -184,7 +184,7 @@ class WebHookExit(GenericAPIView):
 class WebHookExplanation(GenericAPIView):
     def get(self, request):
         incomming_url = load_credential("SLACK_INCOMMING_URL")
-        post_data = {"text": '사용법! 띄어쓰기 주의',
+        post_data = {"text": '사용법! 띄어쓰기 주의\n 이번주 기록 확인 :"https://p1glujg9ma.execute-api.ap-northeast-2.amazonaws.com/dev"',
                      "attachments": [{"text": "출근시 \n /출근   --> 오늘의 Id를 반환합니다. 반환된 Id로 정정시 사용합니다."
                                               "\n (출근 정정하고싶을때) /출근 2019-xx-xx 10:30:00 Id   --> 순서 주의, Id 꼭 써주세요."
                                               "\n 퇴근시 \n /퇴근 -2 Id   --> -2는 쉬었던 시간, 출근시 받았던 Id 꼭 써주세요."
