@@ -207,12 +207,14 @@ class ChartView(TemplateView):
         jun_queryset = WorkLogs.objects.filter(username='pjyong68')
         sang_queryset = WorkLogs.objects.filter(username='dltkddn0323')
         shin_queryset = WorkLogs.objects.filter(username='shimdw2')
+        daisy_queryset = WorkLogs.objects.filter(username='daisymonde01')
 
         # get total data
         total_data = {}
         total_data['준용'] = get_week_data(jun_queryset)
         total_data['상우'] = get_week_data(sang_queryset)
         total_data['찬영'] = get_week_data(shin_queryset)
+        total_data['서연'] = get_week_data(daisy_queryset)
 
         # ordering
         ordered = OrderedDict(sorted(total_data.items(), key=lambda i: i[1]['total'], reverse=True))

@@ -23,6 +23,8 @@ def get_real_name(name):
         return '찬영님'
     elif name == 'dltkddn0323':
         return '상우님'
+    elif name == 'daisymonde01':
+        return '서연님'
     return None
 
 
