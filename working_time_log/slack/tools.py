@@ -16,16 +16,9 @@ def calculate_working_hours(enter_time, exit_time, break_time):
     return total_hours
 
 
-def get_real_name(name):
-    if name == 'pjyong68':
-        return '준용님'
-    elif name == 'shimdw2':
-        return '찬영님'
-    elif name == 'dltkddn0323':
-        return '상우님'
-    elif name == 'daisymonde01':
-        return '서연님'
-    return None
+def get_real_name(user):
+    name = user.korean_name + '님'
+    return name
 
 
 def get_this_monday(today_date):

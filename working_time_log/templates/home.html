@@ -8,7 +8,9 @@
         width: 50%;
     }
     </style>
-    <h2>성공하자</h2>
+    <br/>
+    <h1 style="font-family: 'Noto Sans CJK KR Medium'">{{ title }}</h1>
+    <h2 style="font-family: 'Noto Sans CJK KR Regular'">{{ body|linebreaksbr }}</h2>
     <br><br><br>
     {% for user, data in chart.items %}
     <canvas id = "graph{{ forloop.counter}}" class="chart"></canvas>

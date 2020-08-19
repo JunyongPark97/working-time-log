@@ -13,7 +13,9 @@ websocket = "*"
 djangorestframework = "*"
 mysqlclient = "*"
 pymysql = "*"
+awscli = "*"
 zappa = "*"
+django-storages = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.6.9"
