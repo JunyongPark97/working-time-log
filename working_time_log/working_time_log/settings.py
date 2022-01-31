@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'ue-psgf@(^ylmk^&xm@()1-5bqkk@$*d#s(0f1()f$rq1xsgle'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -71,22 +71,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'working_time_log.wsgi.application'
+SETTING_DEV_DIC = load_credential("develop")
 
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'working_time',
-        'HOST':'choco-database.ckanfuynig82.ap-northeast-2.rds.amazonaws.com',
-        'USER': load_credential("MONDE_DATABASE_USERNAME",""),
-        'PASSWORD': load_credential("MONDE_DATABASE_PASSWORD",""),
-        'OPTIONS':{
-            'init_command':"SET sql_mode='STRICT_TRANS_TABLES'",
-            }
-    }
+    'default': SETTING_DEV_DIC['default']
 }
 
 
@@ -125,8 +117,6 @@ USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
-
-SETTING_DEV_DIC = load_credential("develop")
 
 
 AWS_ACCESS_KEY_ID = SETTING_DEV_DIC['S3']['AWS_ACCESS_KEY_ID']

@@ -9,7 +9,7 @@ class UserAdmin(admin.ModelAdmin):
     list_editable = ['is_active']
 
 class WorkLogsAdmin(admin.ModelAdmin):
-    list_display = ['user', 'entered_time', 'exited_time', 'break_hours', 'random_id', 'total_hours']
+    list_display = ['user', 'entered_time', 'exited_time', 'break_hours', 'random_id', 'total_hours', 'is_user']
 
 class SloganAdmin(admin.ModelAdmin):
     list_display = ['title', 'body','is_active']
