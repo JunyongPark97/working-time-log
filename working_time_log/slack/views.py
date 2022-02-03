@@ -5,10 +5,10 @@ from rest_framework.response import Response
 from collections import OrderedDict
 from rest_framework import status
 from rest_framework.generics import GenericAPIView
-from slack.tools import get_real_name, calculate_working_hours, get_week_data
 from working_time_log.loader import load_credential
 import datetime
 from slack.models import WorkLogs, User, Slogan
+from slack.tools import get_real_name, calculate_working_hours, get_week_data
 from urllib import parse
 import re
 
@@ -17,6 +17,7 @@ class WebHookEnter(GenericAPIView):
 
     def post(self, request):
         user = self.get_user()
+        username = get_real_name(user)
         random_id = self._make_random_id()
         enter_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         text = request.body.decode("utf-8").split('&')[8].split('=')[1]
@@ -43,7 +44,7 @@ class WebHookEnter(GenericAPIView):
             instance.is_user = True
             instance.save()
 
-            self.slack_message('출근시간 업데이트 되었습니다. `\033{}\033`` --> `\033{}\033`'.format(origin_time, re_time))
+            self.slack_message('{}, 출근시간 업데이트 되었습니다. `\033{}\033`` --> `\033{}\033`'.format(username, origin_time, re_time))
             return Response(status=status.HTTP_206_PARTIAL_CONTENT)
 
         if user.logs.exists() and (not user.logs.last().exited_time or not user.logs.last().is_user):
@@ -68,7 +69,6 @@ class WebHookEnter(GenericAPIView):
 
         # slack message
         incomming_url = load_credential("SLACK_INCOMMING_URL")
-        username = get_real_name(user)
         post_data = {"text": '안녕하세요 {}!, 좋은 아침입니다 :) 출근시각 {}'.format(username, enter_time), "attachments": [{"text": "오늘의 id --> {}".format(random_id)}]}
         data = json.dumps(post_data)
         headers = {'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8'}
@@ -135,6 +135,7 @@ class WebHookExit(GenericAPIView):
 
     def post(self, request):
         user = self.get_user()
+        username = get_real_name(user)
         exit_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         text = request.body.decode("utf-8").split('&')[8].split('=')[1]
         if not len(text) > 5 :
@@ -159,7 +160,6 @@ class WebHookExit(GenericAPIView):
             instance.break_hours = b_time
             instance.total_hours = calculate_working_hours(enter_time, re_time, b_time)
             instance.save()
-            username = get_real_name(user)
             self.slack_message('{}, 퇴근시각 변경되었습니다. --> `\033{}\033` 오늘도 수고하셨습니다 :)'.format(username, re_time))
 
         if len(text.split('+')) == 2:
@@ -177,7 +177,6 @@ class WebHookExit(GenericAPIView):
             instance.break_hours = b_time
             instance.total_hours = calculate_working_hours(en_time, exit_time, b_time)
             instance.save()
-            username = get_real_name(user)
             self.slack_message('{}, 퇴근시각 {}  오늘도 수고하셨습니다 :)'.format(username, exit_time))
 
         return Response(status=status.HTTP_200_OK)
